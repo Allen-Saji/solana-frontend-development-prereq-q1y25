@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import * as web3 from "@solana/web3.js";
-require("@solana/wallet-adapter-react-ui/styles.css");
+import "@solana/wallet-adapter-react-ui/styles.css";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import BoilerPlate from "../../components/BoilerPlate";
 
 const Starter = () => {
   const [balance, setBalance] = useState<number | null>(0);
