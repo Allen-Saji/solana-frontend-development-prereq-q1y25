@@ -12,10 +12,22 @@ const Starter = () => {
   useEffect(() => {
     const getInfo = async () => {
       if (connection && publicKey) {
-        const info = await connection.getAccountInfo(publicKey);
-        setBalance(info!.lamports / web3.LAMPORTS_PER_SOL);
+        try {
+          const info = await connection.getAccountInfo(publicKey);
+          if (info) {
+            setBalance(info.lamports / web3.LAMPORTS_PER_SOL);
+          } else {
+            setBalance(0);
+          }
+        } catch (error) {
+          console.error("Failed to fetch account info:", error);
+          setBalance(0);
+        }
+      } else {
+        setBalance(0);
       }
     };
+
     getInfo();
   }, [connection, publicKey]);
 
