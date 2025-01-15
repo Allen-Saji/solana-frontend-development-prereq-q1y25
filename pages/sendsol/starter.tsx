@@ -3,6 +3,7 @@ import * as web3 from "@solana/web3.js";
 import { toast } from "react-toastify";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { ExternalLinkIcon } from "@heroicons/react/outline";
+import { set } from "@coral-xyz/anchor/dist/cjs/utils/features";
 
 const Starter = () => {
   const [account, setAccount] = useState("");
@@ -16,10 +17,24 @@ const Starter = () => {
   useEffect(() => {
     const getInfo = async () => {
       if (connection && publicKey) {
-        const info = await connection.getAccountInfo(publicKey);
-        setBalance(info!.lamports / web3.LAMPORTS_PER_SOL);
+        try {
+          const info = await connection.getAccountInfo(publicKey);
+          if (info) {
+            setBalance(info.lamports / web3.LAMPORTS_PER_SOL);
+          } else {
+            setBalance(0);
+            setTxSig("");
+          }
+        } catch (error) {
+          console.error("Failed to fetch account info:", error);
+          setBalance(0);
+        }
+      } else {
+        setBalance(0);
+        setTxSig("");
       }
     };
+
     getInfo();
   }, [connection, publicKey]);
 
